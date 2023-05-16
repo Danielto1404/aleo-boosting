@@ -37,5 +37,5 @@ ___
 1. You shoold train XGBoost model.
 2. Transpile trained XGBoost model to Aleo smart contract using [leo-transpiler-python](./leo-transpiler-python/leo_transpiler/boostings/xgboost.py)
 3. Deploy transpiled Aleo smart contract to Aleo blockchain
-4. Predict user's music preferences using deployed Aleo smart contract
+4. Predict user's book preferences using deployed Aleo smart contract
 5. Enjoy privacy preserving recommendation system 🚀 :)
