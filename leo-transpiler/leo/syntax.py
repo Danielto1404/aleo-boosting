@@ -19,6 +19,9 @@ class LeoStatements(enum.Enum):
     PROGRAM = "program"
     IMPORT = "import"
     TRANSITION = "transition"
+    MAIN = "main"
+    INLINE = "inline"
+    FUNCTION = "function"
     IF = "if"
     ELSE = "else"
     RETURN = "return"
@@ -37,12 +40,14 @@ class LeoPunctuation(enum.Enum):
     LEFT_CURLY_BRACKET = "{"
     RIGHT_CURLY_BRACKET = "}"
     SPACE = " "
-    TAB = " " * 2
+    TAB = " " * 4
     NL = "\n"
 
 
 class LeoOperators(enum.Enum):
     EQUAL = "="
+    PLUS = "+"
+    MINUS = "-"
     GT = ">"
     LT = "<"
     GTE = ">="
