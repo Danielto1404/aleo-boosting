@@ -5,7 +5,8 @@ from pathlib import Path
 
 from leo_transpiler.leo import (LeoFunctionCall, LeoFunctionDeclarationNode,
                                 LeoNode, LeoReturnNode, LeoSequentialNode,
-                                LeoSumNode, LeoStructDeclarationNode, LeoStructInitNode)
+                                LeoStructDeclarationNode, LeoStructInitNode,
+                                LeoSumNode)
 from leo_transpiler.leo.syntax import LeoStatements
 from leo_transpiler.leo.utils import aleo_program
 from leo_transpiler.quantize import get_leo_quantized_type
