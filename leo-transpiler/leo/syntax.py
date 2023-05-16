@@ -4,6 +4,10 @@ import enum
 class LeoTypes(enum.Enum):
     U32 = "u32"
     U64 = "u64"
+    # i8, i16, i32, i64, i128 and unsigned
+    # integer
+    # types
+    # u8, u16, u32, u64, u128.
 
 
 class LeoStatements(enum.Enum):
@@ -13,6 +17,7 @@ class LeoStatements(enum.Enum):
     IF = "if"
     ELSE = "else"
     RETURN = "return"
+    LET = "let"
 
 
 class LeoPunctuation(enum.Enum):
