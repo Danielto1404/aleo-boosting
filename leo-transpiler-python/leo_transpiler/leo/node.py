@@ -22,6 +22,9 @@ class LeoNode(abc.ABC):
 
 
 class LeoIfElseNode(LeoNode):
+    """
+    Leo AST node for if-else statements.
+    """
     def __init__(self, condition: str, if_node: LeoNode, else_node: LeoNode):
         self.condition = condition
         self.if_node = if_node
@@ -53,6 +56,9 @@ class LeoIfElseNode(LeoNode):
 
 
 class LeoReturnNode(LeoNode):
+    """
+    Leo AST node for a return statement.
+    """
     def __init__(self, value: str):
         self.value = value
 
@@ -66,6 +72,9 @@ class LeoReturnNode(LeoNode):
 
 
 class LeoFunctionDeclarationNode(LeoNode):
+    """
+    Leo AST node for a function declaration.
+    """
     def __init__(
             self,
             func_type: str,
@@ -108,6 +117,9 @@ class LeoFunctionDeclarationNode(LeoNode):
 
 
 class LeoAssignNode(LeoNode):
+    """
+    Leo AST node for an assignment statement.
+    """
     def __init__(self, var_name: str, var_type: LeoTypes, expression: str):
         self.var_name = var_name
         self.var_type = var_type
@@ -127,18 +139,27 @@ class LeoAssignNode(LeoNode):
 
 
 class LeoSumNode(LeoAssignNode):
+    """
+    Leo AST node for a multiple arguments sum.
+    """
     def __init__(self, var_name: str, var_type: LeoTypes, args: tp.List[str]):
         expression = f" {LeoOperators.PLUS.value} ".join(args)
         super().__init__(var_name, var_type, expression)
 
 
 class LeoFunctionCall(LeoAssignNode):
+    """
+    Leo AST node for a function call.
+    """
     def __init__(self, var_name: str, var_type: LeoTypes, func_name: str, func_args: tp.List[str]):
         expression = f"{func_name}({f'{LeoPunctuation.COMMA.value} '.join(func_args)})"
         super().__init__(var_name, var_type, expression)
 
 
 class LeoStructDeclarationNode(LeoNode):
+    """
+    Leo AST node for a struct declaration.
+    """
     def __init__(self, struct_name: str, field_names: tp.List[str], field_types: tp.List[LeoTypes]):
         self.struct_name = struct_name
         self.field_names = field_names
@@ -159,6 +180,9 @@ class LeoStructDeclarationNode(LeoNode):
 
 
 class LeoStructInitNode(LeoNode):
+    """
+    Leo AST node for a struct initialization.
+    """
     def __init__(self, struct_name: str, field_names: tp.List[str], arg_names: tp.List[str]):
         self.struct_name = struct_name
         self.field_names = field_names
@@ -177,6 +201,9 @@ class LeoStructInitNode(LeoNode):
 
 
 class LeoSequentialNode(LeoNode):
+    """
+    Leo AST node for a sequential node.
+    """
     def __init__(self, nodes: tp.List[LeoNode], lines: int = 1):
         self.nodes = nodes
         self.lines = lines

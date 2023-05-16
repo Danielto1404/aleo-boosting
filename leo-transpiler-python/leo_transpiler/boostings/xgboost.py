@@ -10,6 +10,10 @@ class XgboostTranspiler(BoostingTranspiler):
     Transpiler for XGBoost models.
     """
     def __init__(self, model, quantize_bits: int = 8):
+        """
+        :param model: The XGBoost model.
+        :param quantize_bits: The number of bits to quantize to.
+        """
         trees = model.get_booster()
         super().__init__(
             model=model,

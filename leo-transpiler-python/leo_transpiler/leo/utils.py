@@ -2,6 +2,9 @@ from leo_transpiler.leo.syntax import LeoPunctuation, LeoStatements
 
 
 def aleo_program(code: str, program_name: str):
+    """
+    Create a Leo program from a code snippet.
+    """
     return "{} {} {} {} {} {} {}".format(
         LeoStatements.PROGRAM.value,
         f"{program_name}.aleo",
