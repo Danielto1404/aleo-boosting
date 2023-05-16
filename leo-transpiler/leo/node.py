@@ -68,17 +68,19 @@ class LeoTransitionNode(LeoNode):
     def __init__(
             self,
             transition_name: str,
+            input_arg_names: tp.List[str],
             input_arg_types: tp.List[LeoTypes],
             output_arg_type: LeoTypes,
             inner_node: LeoNode
     ):
         self.transition_name = transition_name
+        self.input_arg_names = input_arg_names
         self.input_arg_types = input_arg_types
         self.output_arg_type = output_arg_type
         self.inner_node = inner_node
 
     def to_code(self, tabs: int = 0) -> str:
-        input_args = [f"x{i}{LeoPunctuation.COLON.value} {t.value}" for i, t in
+        input_args = [f"{self.input_arg_names[i]}{LeoPunctuation.COLON.value} {t.value}" for i, t in
                       enumerate(self.input_arg_types)]
         input_args = f"{LeoPunctuation.COMMA.value} ".join(input_args)
 

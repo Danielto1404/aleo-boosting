@@ -41,7 +41,8 @@ class XgboostTranspiler(BoostingTranspiler):
             right = self.build_tree(df, else_node)
             return LeoIfElseNode(condition, left, right)
         else:
-            return LeoReturnNode(df_node["Gain"])
+            value = quantize(df_node["Gain"], self.quantize_bits)
+            return LeoReturnNode(value)
 
     @staticmethod
     def node_id_to_idx(node_id: str) -> int:

@@ -26,4 +26,4 @@ if __name__ == '__main__':
 
     # os.makedirs(_args.output, exist_ok=True)
 
-    print(tree.to_code())
+    # print(tree.to_code())
