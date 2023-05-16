@@ -38,7 +38,7 @@ class LeoOperators(enum.Enum):
 
 SPACE = " "
 TAB = SPACE * 4
-NEWLINE = "\n"
+NL = "\n"
 
 __all__ = [
     "LeoTypes",
@@ -47,5 +47,5 @@ __all__ = [
     "LeoOperators",
     "SPACE",
     "TAB",
-    "NEWLINE",
+    "NL",
 ]

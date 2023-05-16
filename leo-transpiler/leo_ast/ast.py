@@ -1,7 +1,8 @@
 import pickle
 import typing as tp
+
 from leo_ast.node import LeoNode
-from leo_ast.syntax import NEWLINE
+from leo_ast.syntax import NL
 
 
 class LeoAst:
@@ -14,7 +15,7 @@ class LeoAst:
 
         :return: Leo program
         """
-        return NEWLINE.join([node.to_code() for node in self.nodes])
+        return NL.join([node.to_code() for node in self.nodes])
 
     def save(self, path: str):
         """
