@@ -1,0 +1,10 @@
+{
+    "program": "contracts.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "development": {
+        "private_key": "APrivateKey1zkpGiYej6WuJPKJDskpj5vDaLrEZ8pvPaF6XWK2PM9uGDHb",
+        "address": "aleo14hzye04ndwzgdd4ze4wsnw3rfl6m8w7mzdtwd5dcpq56y3j0g58scs7xm3"
+    },
+    "license": "MIT"
+}

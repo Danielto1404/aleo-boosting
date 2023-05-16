@@ -17,8 +17,6 @@ Also we automatically detect if you Xgboot model is a classifier or regressor. A
 For _XgboostClassifier_ our framework will create function that returns prediction for each tree and then we will sum all predictions and return final prediction. Also we will return probabilities for each class using `Probas` structure which is defined in generated code.
 
 For _XgboostRegressor_ our framework will create function that returns prediction for each tree and then we will sum all predictions and return final prediction.
-
-You can see generated code in [examples](./examples) folder.
 ___
 
 2. Save Aleo Smart Contract
@@ -72,7 +70,7 @@ program iris.aleo {
     } 
 ```
 
-You can see `Probas` structure above that's becase we have 3 classes in our dataset. You can also see `class_0_proba`, `class_1_proba`, `class_2_proba` variables, which are probabilities of each class. We can use this probabilities later on our service.
+You can see `Probas` structure above that's becase we have 3 classes in our dataset. You can also see `class_0_proba`, `class_1_proba`, `class_2_proba` variables, which are probabilities of each class. You can use them in your service later on.
 
 ___
 

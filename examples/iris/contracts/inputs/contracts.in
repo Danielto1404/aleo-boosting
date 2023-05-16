@@ -1,0 +1,6 @@
+// The program input for contracts/src/main.leo
+    [main]
+    sepal_length_cm: i32 = 19114i32;
+    sepal_width_cm: i32 = 16384i32;
+    petal_length_cm: i32 = 23881i32;
+    petal_width_cm: i32 = 30037i32;

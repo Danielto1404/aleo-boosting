@@ -1,4 +1,4 @@
-# iris.aleo
+# contracts.aleo
 
 ## Build Guide
 
