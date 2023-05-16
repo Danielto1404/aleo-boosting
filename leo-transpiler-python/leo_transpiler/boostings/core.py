@@ -13,6 +13,10 @@ from leo_transpiler.quantize import get_leo_quantized_type
 
 
 class BoostingTranspiler(abc.ABC):
+    """
+    Abstract class for transpiling boosting models to Leo programs.
+    """
+
     def __init__(
             self,
             model,
@@ -21,6 +25,13 @@ class BoostingTranspiler(abc.ABC):
             n_classes: tp.Optional[int],
             quantize_bits: int
     ):
+        """
+        :param model: The boosting model to transpile.
+        :param feature_names: The names of the features.
+        :param n_estimators: The number of estimators in the boosting model.
+        :param n_classes: The number of classes in the boosting model. If None, the model is assumed to be a regression model.
+        :param quantize_bits: The number of bits to quantize the model to.
+        """
         self.model = model
         self.quantize_bits = quantize_bits
         self.feature_names = feature_names

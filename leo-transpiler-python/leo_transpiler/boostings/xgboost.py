@@ -6,6 +6,9 @@ from leo_transpiler.quantize import quantize
 
 
 class XgboostTranspiler(BoostingTranspiler):
+    """
+    Transpiler for XGBoost models.
+    """
     def __init__(self, model, quantize_bits: int = 8):
         trees = model.get_booster()
         super().__init__(
