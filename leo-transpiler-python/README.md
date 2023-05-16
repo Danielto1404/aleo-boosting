@@ -10,6 +10,17 @@ from leo_transpiler.boostings import XgboostTranspiler
 transpiler = XgboostTranspiler(model, quantize_bits=64)
 ```
 
+By default we use 64 bits for quantization, but you can change it to 128, 32 bits or 16 bits.
+
+Also we automatically detect if you Xgboot model is a classifier or regressor. And we use different transpilers for each case.
+
+For _XgboostClassifier_ our framework will create function that returns prediction for each tree and then we will sum all predictions and return final prediction. Also we will return probabilities for each class using `Probas` structure which is defined in generated code.
+
+For _XgboostRegressor_ our framework will create function that returns prediction for each tree and then we will sum all predictions and return final prediction.
+
+You can see generated code in [examples](./examples) folder.
+___
+
 2. Save Aleo Smart Contract
 ```python
 path = "PATH_TO_SRC_ALEO_PROJECT"
@@ -61,6 +72,13 @@ program iris.aleo {
     } 
 ```
 
-### TODO:
-- [Catboost, LightGBM] Add support for other boosting models
-- [General] Add support for other ML models
+You can see `Probas` structure above that's becase we have 3 classes in our dataset. You can also see `class_0_proba`, `class_1_proba`, `class_2_proba` variables, which are probabilities of each class. We can use this probabilities later on our service.
+
+___
+
+### Supported models:
+- [XGBoost](./leo-transpiler-python/leo_transpiler/boostings/xgboost.py)
+
+### In progress:
+- [Catboost](./leo-transpiler-python/leo_transpiler/boostings/catboost.py)
+- [LightGBM](./leo-transpiler-python/leo_transpiler/boostings/lightgbm.py)
