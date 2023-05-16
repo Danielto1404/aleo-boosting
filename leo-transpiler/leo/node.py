@@ -1,7 +1,7 @@
 import abc
 import typing as tp
 
-from leo_ast.syntax import NL, TAB, LeoPunctuation, LeoStatements, LeoTypes
+from leo.syntax import NL, TAB, LeoPunctuation, LeoStatements, LeoTypes
 
 
 class LeoNode(abc.ABC):
@@ -49,7 +49,7 @@ class LeoIfElseNode(LeoNode):
         )
 
 
-class ReturnNode(LeoNode):
+class LeoReturnNode(LeoNode):
     """
     Return node.
     """
@@ -58,7 +58,7 @@ class ReturnNode(LeoNode):
         self.value = value
 
     def to_code(self, tabs: int = 0) -> str:
-        return "{} {} {}".format(TAB * tabs, LeoStatements.RETURN.value, self.value)
+        return "{} {} {}{}".format(TAB * tabs, LeoStatements.RETURN.value, self.value, LeoPunctuation.SEMINCOLON.value)
 
 
 class LeoTransitionNode(LeoNode):
@@ -97,7 +97,7 @@ class LeoTransitionNode(LeoNode):
         )
 
 
-n = LeoIfElseNode("a > b", ReturnNode("a"), ReturnNode("b"))
+n = LeoIfElseNode("a > b", LeoReturnNode("a"), LeoReturnNode("b"))
 
 tree = LeoTransitionNode(
     "main",
@@ -105,3 +105,11 @@ tree = LeoTransitionNode(
     LeoTypes.U32,
     n
 )
+
+__all__ = [
+    "LeoNode",
+    "LeoIfElseNode",
+    "LeoReturnNode",
+    "LeoTransitionNode",
+    "tree"
+]
