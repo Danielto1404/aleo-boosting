@@ -1,9 +1,7 @@
 import argparse
 import os
 
-from boostings import CatboostTranspiler
-
-print(CatboostTranspiler())
+from boostings import CatboostTranspiler, XgboostTranspiler
 
 
 def transpile(model: str, model_type: str, output: str):
