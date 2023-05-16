@@ -1,17 +1,12 @@
 import pickle
-
-
-class LeoNode:
-    pass
+import typing as tp
+from leo_ast.node import LeoNode
+from leo_ast.syntax import NEWLINE
 
 
 class LeoAst:
-    def __init__(self, features_in: int, features_out: int):
-        """
-        :param features_in: Amount of input features
-        :param features_out: Amount of output features
-        """
-        pass
+    def __init__(self, nodes: tp.List[LeoNode]):
+        self.nodes = nodes
 
     def to_code(self) -> str:
         """
@@ -19,6 +14,7 @@ class LeoAst:
 
         :return: Leo program
         """
+        return NEWLINE.join([node.to_code() for node in self.nodes])
 
     def save(self, path: str):
         """

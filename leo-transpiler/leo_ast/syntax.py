@@ -10,6 +10,9 @@ class LeoStatements(enum.Enum):
     PROGRAM = "program"
     IMPORT = "import"
     TRANSITION = "transition"
+    IF = "if"
+    ELSE = "else"
+    RETURN = "return"
 
 
 class LeoPunctuation(enum.Enum):
@@ -30,7 +33,8 @@ class LeoOperators(enum.Enum):
     LTE = "<="
 
 
-TAB = "\t"
+SPACE = " "
+TAB = SPACE * 4
 NEWLINE = "\n"
 
 __all__ = [
@@ -38,6 +42,7 @@ __all__ = [
     "LeoStatements",
     "LeoPunctuation",
     "LeoOperators",
+    "SPACE",
     "TAB",
     "NEWLINE",
 ]
