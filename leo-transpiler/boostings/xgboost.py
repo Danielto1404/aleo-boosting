@@ -1,22 +1,16 @@
 from boostings.core import BoostingTranspiler
-from leo_ast import LeoNode, LeoIfElseNode, ReturnNode
-from pandas import DataFrame
-from xgboost import XGBRegressor
+from leo import LeoNode, LeoIfElseNode, LeoReturnNode
 
 
 class XgboostTranspiler(BoostingTranspiler):
-    def tree2leo(self, tree: XGBRegressor) -> LeoNode:
+    def tree2leo(self, tree) -> LeoNode:
         self.tree = tree
-        
         df = tree.get_booster().trees_to_dataframe()
-        
         root = df.iloc[0]
-        
         tree = self.build_subtree(root)
-        
         return tree
-        
-    def build_subtree(self, df_node) -> LeoIfElseNode:     
+
+    def build_subtree(self, df_node) -> LeoNode:
         if df_node['Feature'] != 'Leaf':
             if_node_id = df_node['Yes']
             else_node_id = df_node['No']
@@ -24,15 +18,13 @@ class XgboostTranspiler(BoostingTranspiler):
             if_node = self.tree.iloc[self.node_id_to_idx(if_node_id)]
             else_node = self.tree.iloc[self.node_id_to_idx(else_node_id)]
 
-            tmp += f'if x[{df_node["Feature"]}] <= {df_node["Split"]}:\n'
-            self.build_subtree(if_node)
-            tmp += f'else:\n'
-            self.build_subtree(else_node)
+            condition = f'x[{df_node["Feature"]}] <= {df_node["Split"]}'
+            left = self.build_subtree(if_node)
+            right = self.build_subtree(else_node)
+            return LeoIfElseNode(condition, left, right)
         else:
-            tmp += f'return {df_node["Gain"]}\n'     
-               
-        root = LeoIfElseNode("a > b", ReturnNode("a"), ReturnNode("b"))
+            return LeoReturnNode(df_node['Gain'])
 
     @staticmethod
     def node_id_to_idx(node_id: str) -> int:
-        return int(node_id.split('-')[1])
+        return int(node_id.split("-")[1])

@@ -152,5 +152,6 @@ __all__ = [
     "LeoIfElseNode",
     "LeoReturnNode",
     "LeoTransitionNode",
-    "tree"
+    "LeoAssignNode",
+    "LeoSequentialNode"
 ]
