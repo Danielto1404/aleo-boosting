@@ -1,5 +1,6 @@
-from .core import BoostingTranspiler
+from core import BoostingTranspiler
 
 
 class CatboostTranspiler(BoostingTranspiler):
-    pass
+    def tree2leo(self, tree_idx: int) -> str:
+        pass
