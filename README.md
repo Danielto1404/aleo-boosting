@@ -27,7 +27,9 @@ ___
 ### _Demo: Privacy preserving recommendation system_
 Due to privacy preserving nature of Aleo smart contracts, we can build recommendation system without revealing user's data to the server. Many problems can be solved using this approach, for example, we can build a recommendation system for a dating app, where users can find their perfect match without revealing their personal data to the server.
 
-For demo purposes we will use [Spotify dataset](), which contains information about users and their music preferences. We will build a recommendation system, which will recommend songs to users based on their music preferences.
+For demonstration purposes we will use [Book Recommenation Dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset) from Kaggle.
+
+You can follow step-by-step example from [this](./book-recommender-system/) instruction
 
 ___
 

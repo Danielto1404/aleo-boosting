@@ -14,7 +14,7 @@ class XgboostTranspiler(BoostingTranspiler):
         super().__init__(
             model=model,
             feature_names=trees.feature_names,
-            n_classes=model.n_classes_,
+            n_classes=hasattr(model, "n_classes_") and model.n_classes_ or None,
             n_estimators=model.n_estimators,
             quantize_bits=quantize_bits
         )

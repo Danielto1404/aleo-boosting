@@ -120,7 +120,11 @@ class BoostingTranspiler(abc.ABC):
             body=LeoSequentialNode(calls + returns)
         )
 
-        code = LeoSequentialNode([struct] + functions + [main_transition], lines=2).to_code(tabs=1)
+        if self.is_regression:
+            code = LeoSequentialNode(functions + [main_transition], lines=2).to_code(tabs=1)
+        else:
+            code = LeoSequentialNode([struct] + functions + [main_transition], lines=2).to_code(tabs=1)
+
         with open(root / "main.leo", "w") as f:
             f.write(aleo_program(code, program_name))
 
