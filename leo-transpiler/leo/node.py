@@ -1,7 +1,7 @@
 import abc
 import typing as tp
 
-from leo.syntax import NL, TAB, LeoPunctuation, LeoStatements, LeoTypes, LeoOperators
+from leo.syntax import LeoOperators, LeoPunctuation, LeoStatements, LeoTypes
 
 
 class LeoNode(abc.ABC):
@@ -29,37 +29,35 @@ class LeoIfElseNode(LeoNode):
     def to_code(self, tabs: int = 0) -> str:
         if_code = self.if_node.to_code(tabs + 1)
         else_code = self.else_node.to_code(tabs + 1)
-        return "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-            TAB * tabs,
+        return "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+            LeoPunctuation.TAB.value * tabs,
             LeoStatements.IF.value,
+            LeoPunctuation.LEFT_BRACKET.value,
             self.condition,
+            LeoPunctuation.RIGHT_BRACKET.value,
             LeoPunctuation.LEFT_CURLY_BRACKET.value,
-            NL,
+            LeoPunctuation.NL.value,
             if_code,
-            NL,
-            TAB * tabs,
+            LeoPunctuation.NL.value,
+            LeoPunctuation.TAB.value * tabs,
             LeoPunctuation.RIGHT_CURLY_BRACKET.value,
             LeoStatements.ELSE.value,
             LeoPunctuation.LEFT_CURLY_BRACKET.value,
-            NL,
+            LeoPunctuation.NL.value,
             else_code,
-            NL,
-            TAB * tabs,
+            LeoPunctuation.NL.value,
+            LeoPunctuation.TAB.value * tabs,
             LeoPunctuation.RIGHT_CURLY_BRACKET.value
         )
 
 
 class LeoReturnNode(LeoNode):
-    """
-    Return node.
-    """
-
     def __init__(self, value: str):
         self.value = value
 
     def to_code(self, tabs: int = 0) -> str:
         return "{} {} {}{}".format(
-            TAB * tabs,
+            LeoPunctuation.TAB.value * tabs,
             LeoStatements.RETURN.value,
             self.value,
             LeoPunctuation.SEMINCOLON.value
@@ -95,9 +93,9 @@ class LeoTransitionNode(LeoNode):
             LeoPunctuation.RIGHT_ARROW.value,
             self.output_arg_type.value,
             LeoPunctuation.LEFT_CURLY_BRACKET.value,
-            NL,
+            LeoPunctuation.NL.value,
             inner_code,
-            NL,
+            LeoPunctuation.NL.value,
             LeoPunctuation.RIGHT_CURLY_BRACKET.value
         )
 
@@ -110,7 +108,7 @@ class LeoAssignNode(LeoNode):
 
     def to_code(self, tabs: int = 0) -> str:
         return "{} {} {}{} {} {} {}{}".format(
-            TAB * tabs,
+            LeoPunctuation.TAB.value * tabs,
             LeoStatements.LET.value,
             self.var_name,
             LeoPunctuation.COLON.value,
@@ -127,25 +125,9 @@ class LeoSequentialNode(LeoNode):
 
     def to_code(self, tabs: int = 0) -> str:
         codes = [node.to_code(tabs) for node in self.nodes]
-        code = NL.join(codes)
+        code = LeoPunctuation.NL.value.join(codes)
         return code
 
-
-n = LeoIfElseNode(
-    "a > b",
-    LeoSequentialNode([
-        LeoAssignNode("x", LeoTypes.U64, "y + z"),
-        LeoReturnNode("x")
-    ]),
-    LeoReturnNode("b")
-)
-
-tree = LeoTransitionNode(
-    "main",
-    [LeoTypes.U32, LeoTypes.U32],
-    LeoTypes.U32,
-    n
-)
 
 __all__ = [
     "LeoNode",

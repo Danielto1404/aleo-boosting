@@ -3,7 +3,7 @@ from leo import LeoNode
 
 
 class CatboostTranspiler(BoostingTranspiler):
-    def tree2leo(self, tree_idx: int) -> LeoNode:
+    def get_leo_ast_nodes(self, tree_idx: int) -> LeoNode:
         pass
 
 

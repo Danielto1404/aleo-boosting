@@ -2,12 +2,17 @@ import enum
 
 
 class LeoTypes(enum.Enum):
+    U8 = "u8"
+    U16 = "u16"
     U32 = "u32"
     U64 = "u64"
-    # i8, i16, i32, i64, i128 and unsigned
-    # integer
-    # types
-    # u8, u16, u32, u64, u128.
+    U128 = "u128"
+
+    I8 = "i8"
+    I16 = "i16"
+    I32 = "i32"
+    I64 = "i64"
+    I128 = "i128"
 
 
 class LeoStatements(enum.Enum):
@@ -31,6 +36,9 @@ class LeoPunctuation(enum.Enum):
     RIGHT_SQUARE_BRACKET = "]"
     LEFT_CURLY_BRACKET = "{"
     RIGHT_CURLY_BRACKET = "}"
+    SPACE = " "
+    TAB = " " * 2
+    NL = "\n"
 
 
 class LeoOperators(enum.Enum):
@@ -41,16 +49,9 @@ class LeoOperators(enum.Enum):
     LTE = "<="
 
 
-SPACE = " "
-TAB = SPACE * 2
-NL = "\n"
-
 __all__ = [
     "LeoTypes",
     "LeoStatements",
     "LeoPunctuation",
-    "LeoOperators",
-    "SPACE",
-    "TAB",
-    "NL",
+    "LeoOperators"
 ]

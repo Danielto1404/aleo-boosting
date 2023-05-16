@@ -1,8 +1,4 @@
 import argparse
-import os
-
-from boostings import CatboostTranspiler, XgboostTranspiler
-from leo.node import tree
 
 
 def transpile(model: str, model_type: str, output: str):

@@ -1,29 +1,47 @@
+import typing as tp
+
 from boostings.core import BoostingTranspiler
-from leo import LeoNode, LeoIfElseNode, LeoReturnNode
+from leo import LeoIfElseNode, LeoNode, LeoReturnNode
+from quantize import quantize
 
 
 class XgboostTranspiler(BoostingTranspiler):
-    def tree2leo(self, tree) -> LeoNode:
-        self.tree = tree
-        df = tree.get_booster().trees_to_dataframe()
-        root = df.iloc[0]
-        tree = self.build_subtree(root)
-        return tree
+    def __init__(self, model, quantize_bits: int = 8):
+        super().__init__(model, quantize_bits)
 
-    def build_subtree(self, df_node) -> LeoNode:
-        if df_node['Feature'] != 'Leaf':
-            if_node_id = df_node['Yes']
-            else_node_id = df_node['No']
+        trees = model.get_booster()
+        self.feature_names = trees.feature_names
 
-            if_node = self.tree.iloc[self.node_id_to_idx(if_node_id)]
-            else_node = self.tree.iloc[self.node_id_to_idx(else_node_id)]
+        self._dfs = [
+            trees[i].trees_to_dataframe() for i in range(model.n_estimators)
+        ]
 
-            condition = f'x[{df_node["Feature"]}] <= {df_node["Split"]}'
-            left = self.build_subtree(if_node)
-            right = self.build_subtree(else_node)
+    def get_leo_ast_nodes(self) -> tp.List[LeoNode]:
+        nodes = [
+            self.build_tree(self._dfs[i], self._dfs[i].iloc[0])
+            for i in range(self.model.n_estimators)
+        ]
+
+        return nodes
+
+    def build_tree(self, df, df_node) -> LeoNode:
+        feature_name = df_node["Feature"]
+        if feature_name != "Leaf":
+            if_node_id = df_node["Yes"]
+            else_node_id = df_node["No"]
+
+            if_node = df.iloc[self.node_id_to_idx(if_node_id)]
+            else_node = df.iloc[self.node_id_to_idx(else_node_id)]
+
+            value = quantize(df_node["Split"], self.quantize_bits)
+
+            condition = f"{feature_name} < {value}"
+
+            left = self.build_tree(df, if_node)
+            right = self.build_tree(df, else_node)
             return LeoIfElseNode(condition, left, right)
         else:
-            return LeoReturnNode(df_node['Gain'])
+            return LeoReturnNode(df_node["Gain"])
 
     @staticmethod
     def node_id_to_idx(node_id: str) -> int:
