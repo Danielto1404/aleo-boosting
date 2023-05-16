@@ -1,12 +1,12 @@
 import abc
 
-from leo_ast import LeoAst
+from leo import LeoNode
 
 
 class BoostingTranspiler(abc.ABC):
 
     @abc.abstractmethod
-    def tree2leo(self, tree_idx: int) -> LeoAst:
+    def tree2leo(self, tree_idx: int) -> LeoNode:
         pass
 
     def __repr__(self):

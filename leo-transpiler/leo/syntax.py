@@ -37,7 +37,7 @@ class LeoOperators(enum.Enum):
 
 
 SPACE = " "
-TAB = SPACE * 4
+TAB = SPACE * 2
 NL = "\n"
 
 __all__ = [
