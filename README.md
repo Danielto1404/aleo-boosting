@@ -13,5 +13,5 @@ Privacy preserving recommender systems using CatBoost and Aleo
 2. Transpile the model to Aleo
 
 ```shell
-python leo-transpiler/transpile.py --model_path=model.pkl --model-type=xgboost --output=leo-contrants
+python leo-transpiler/transpile.py --model_path=model.pkl --model-type=xgboost --output=aleo-smart-contrants
 ```
