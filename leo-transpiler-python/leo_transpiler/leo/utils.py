@@ -1,4 +1,4 @@
-from leo.syntax import LeoPunctuation, LeoStatements
+from leo_transpiler.leo.syntax import LeoPunctuation, LeoStatements
 
 
 def aleo_program(code: str, program_name: str):

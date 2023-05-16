@@ -1,7 +1,8 @@
 import abc
 import typing as tp
 
-from leo.syntax import LeoOperators, LeoPunctuation, LeoStatements, LeoTypes
+from leo_transpiler.leo.syntax import (LeoOperators, LeoPunctuation,
+                                       LeoStatements, LeoTypes)
 
 
 class LeoNode(abc.ABC):

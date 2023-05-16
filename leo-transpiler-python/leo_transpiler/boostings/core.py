@@ -3,25 +3,29 @@ import os
 import typing as tp
 from pathlib import Path
 
-from leo import (LeoFunctionCall, LeoFunctionDeclarationNode, LeoNode,
-                 LeoReturnNode, LeoSequentialNode, LeoSumNode)
-from leo.syntax import LeoStatements
-from leo.utils import aleo_program
-from quantize import get_leo_quantized_type
+from leo_transpiler.leo import (LeoFunctionCall, LeoFunctionDeclarationNode,
+                                LeoNode, LeoReturnNode, LeoSequentialNode,
+                                LeoSumNode)
+from leo_transpiler.leo.syntax import LeoStatements
+from leo_transpiler.leo.utils import aleo_program
+from leo_transpiler.quantize import get_leo_quantized_type
 
 
 class BoostingTranspiler(abc.ABC):
-    def __init__(self, model, quantize_bits: int = 8):
-        """
-        Abstract class for transpilers of boosting models.
-
-        :param model: Boosting model
-        :param quantize_bits: Number of bits to quantize the model to (default: 8)
-            Possible values: 8, 16, 32, 64, 128
-        """
+    def __init__(
+            self,
+            model,
+            feature_names: tp.List[str],
+            n_estimators: int,
+            n_classes: tp.Optional[int],
+            quantize_bits: int
+    ):
         self.model = model
         self.quantize_bits = quantize_bits
-        self.feature_names = None
+        self.feature_names = feature_names
+        self.n_classes = n_classes
+        self.n_estimators = n_estimators
+        self.is_regression = n_classes is None
 
     @abc.abstractmethod
     def get_leo_ast_nodes(self) -> tp.List[LeoNode]:
@@ -48,7 +52,7 @@ class BoostingTranspiler(abc.ABC):
         for i, node in enumerate(nodes):
             func = LeoFunctionDeclarationNode(
                 func_type=LeoStatements.FUNCTION.value,
-                func_name=f"tree_{i}",
+                func_name=f"tree_{i}" if self.is_regression else f"class_{i % self.n_classes}_tree_{i // self.n_classes}",
                 input_arg_names=self.feature_names,
                 input_arg_types=input_types,
                 output_arg_type=output_type,
@@ -58,16 +62,28 @@ class BoostingTranspiler(abc.ABC):
 
         calls = [
             LeoFunctionCall(
-                var_name=f"pred_{i}", var_type=output_type, func_name=f"tree_{i}",
+                var_name=f"pred_{i}" if self.is_regression else f"class_{i % self.n_classes}_pred_{i // self.n_classes}",
+                var_type=output_type,
+                func_name=f"tree_{i}" if self.is_regression else f"class_{i % self.n_classes}_tree_{i // self.n_classes}",
                 func_args=self.feature_names
             )
             for i in range(len(nodes))
         ]
 
-        return_node = [
-            LeoSumNode("answer", output_type, args=[f"pred_{i}" for i in range(len(nodes))]),
-            LeoReturnNode("answer")
-        ]
+        if self.is_regression:
+            returns = [
+                LeoSumNode("value", output_type, args=[f"pred_{i}" for i in range(len(nodes))]),
+                LeoReturnNode("value")
+            ]
+        else:
+            returns = [
+                LeoSumNode(
+                    var_name=f"class_{c}_proba",
+                    var_type=output_type,
+                    args=[f"class_{c}_pred_{i}" for i in range(self.n_estimators)]
+                )
+                for c in range(self.n_classes)
+            ]
 
         main_transition = LeoFunctionDeclarationNode(
             func_type=LeoStatements.TRANSITION.value,
@@ -75,7 +91,7 @@ class BoostingTranspiler(abc.ABC):
             input_arg_names=self.feature_names,
             input_arg_types=input_types,
             output_arg_type=output_type,
-            body=LeoSequentialNode(calls + return_node)
+            body=LeoSequentialNode(calls + returns)
         )
 
         code = LeoSequentialNode(functions + [main_transition], lines=2).to_code(tabs=1)

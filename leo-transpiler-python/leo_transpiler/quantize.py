@@ -1,4 +1,4 @@
-from leo.syntax import LeoTypes
+from leo_transpiler.leo.syntax import LeoTypes
 
 
 def get_leo_quantized_type(bits: int) -> LeoTypes:

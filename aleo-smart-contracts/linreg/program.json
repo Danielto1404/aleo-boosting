@@ -1,0 +1,10 @@
+{
+    "program": "linreg.aleo",
+    "version": "0.0.0",
+    "description": "",
+    "development": {
+        "private_key": "APrivateKey1zkpHwoDRMDhnRBhkFeGEEhWiQVJtCmMizvefFwJJCPbkaLy",
+        "address": "aleo1mcx6p7m6ztq3pwzmxznqfts2gp2zx5t7kr2wpyv5u85zyj2pxsyqs28fmp"
+    },
+    "license": "MIT"
+}

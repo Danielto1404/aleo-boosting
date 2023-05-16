@@ -1,7 +1,7 @@
 import typing as tp
 
-from boostings.core import BoostingTranspiler
-from leo import LeoNode
+from leo_transpiler.boostings.core import BoostingTranspiler
+from leo_transpiler.leo import LeoNode
 
 
 class CatboostTranspiler(BoostingTranspiler):

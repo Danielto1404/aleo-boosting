@@ -1,28 +1,33 @@
 import typing as tp
 
-from boostings.core import BoostingTranspiler
-from leo import LeoIfElseNode, LeoNode, LeoReturnNode
-from quantize import quantize
+from leo_transpiler.boostings.core import BoostingTranspiler
+from leo_transpiler.leo import LeoIfElseNode, LeoNode, LeoReturnNode
+from leo_transpiler.quantize import quantize
 
 
 class XgboostTranspiler(BoostingTranspiler):
     def __init__(self, model, quantize_bits: int = 8):
-        super().__init__(model, quantize_bits)
-
         trees = model.get_booster()
-        self.feature_names = trees.feature_names
+        super().__init__(
+            model=model,
+            feature_names=trees.feature_names,
+            n_classes=model.n_classes_,
+            n_estimators=model.n_estimators,
+            quantize_bits=quantize_bits
+        )
 
-        self._dfs = [
-            trees[i].trees_to_dataframe() for i in range(model.n_estimators)
-        ]
+        self._dfs = []
+        for i in range(self.n_estimators):
+            df = trees[i].trees_to_dataframe()
+            if self.is_regression:
+                self._dfs.append(df)
+            else:
+                for c in range(self.n_classes):
+                    class_df = df[df["Tree"] == c].reset_index(drop=True)
+                    self._dfs.append(class_df)
 
     def get_leo_ast_nodes(self) -> tp.List[LeoNode]:
-        nodes = [
-            self.build_tree(self._dfs[i], self._dfs[i].iloc[0])
-            for i in range(self.model.n_estimators)
-        ]
-
-        return nodes
+        return [self.build_tree(df, df.iloc[0]) for df in self._dfs]
 
     def build_tree(self, df, df_node) -> LeoNode:
         feature_name = df_node["Feature"]
