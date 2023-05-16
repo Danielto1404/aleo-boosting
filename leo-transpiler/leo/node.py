@@ -1,7 +1,7 @@
 import abc
 import typing as tp
 
-from leo.syntax import NL, TAB, LeoPunctuation, LeoStatements, LeoTypes
+from leo.syntax import NL, TAB, LeoPunctuation, LeoStatements, LeoTypes, LeoOperators
 
 
 class LeoNode(abc.ABC):
@@ -58,7 +58,12 @@ class LeoReturnNode(LeoNode):
         self.value = value
 
     def to_code(self, tabs: int = 0) -> str:
-        return "{} {} {}{}".format(TAB * tabs, LeoStatements.RETURN.value, self.value, LeoPunctuation.SEMINCOLON.value)
+        return "{} {} {}{}".format(
+            TAB * tabs,
+            LeoStatements.RETURN.value,
+            self.value,
+            LeoPunctuation.SEMINCOLON.value
+        )
 
 
 class LeoTransitionNode(LeoNode):
@@ -97,7 +102,43 @@ class LeoTransitionNode(LeoNode):
         )
 
 
-n = LeoIfElseNode("a > b", LeoReturnNode("a"), LeoReturnNode("b"))
+class LeoAssignNode(LeoNode):
+    def __init__(self, var_name: str, var_type: LeoTypes, expression: str):
+        self.var_name = var_name
+        self.var_type = var_type
+        self.expression = expression
+
+    def to_code(self, tabs: int = 0) -> str:
+        return "{} {} {}{} {} {} {}{}".format(
+            TAB * tabs,
+            LeoStatements.LET.value,
+            self.var_name,
+            LeoPunctuation.COLON.value,
+            self.var_type.value,
+            LeoOperators.EQUAL.value,
+            self.expression,
+            LeoPunctuation.SEMINCOLON.value
+        )
+
+
+class LeoSequentialNode(LeoNode):
+    def __init__(self, nodes: tp.List[LeoNode]):
+        self.nodes = nodes
+
+    def to_code(self, tabs: int = 0) -> str:
+        codes = [node.to_code(tabs) for node in self.nodes]
+        code = NL.join(codes)
+        return code
+
+
+n = LeoIfElseNode(
+    "a > b",
+    LeoSequentialNode([
+        LeoAssignNode("x", LeoTypes.U64, "y + z"),
+        LeoReturnNode("x")
+    ]),
+    LeoReturnNode("b")
+)
 
 tree = LeoTransitionNode(
     "main",
