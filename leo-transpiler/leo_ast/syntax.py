@@ -17,6 +17,9 @@ class LeoStatements(enum.Enum):
 
 class LeoPunctuation(enum.Enum):
     COMMA = ","
+    SEMINCOLON = ";"
+    COLON = ":"
+    RIGHT_ARROW = "->"
     LEFT_BRACKET = "("
     RIGHT_BRACKET = ")"
     LEFT_SQUARE_BRACKET = "["
