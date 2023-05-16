@@ -1,8 +1,16 @@
 import pickle
 
 
+class LeoNode:
+    pass
+
+
 class LeoAst:
-    def __init__(self):
+    def __init__(self, features_in: int, features_out: int):
+        """
+        :param features_in: Amount of input features
+        :param features_out: Amount of output features
+        """
         pass
 
     def to_code(self) -> str:
