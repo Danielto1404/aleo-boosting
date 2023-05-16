@@ -1,6 +1,10 @@
 import argparse
 import os
 
+from boostings import CatboostTranspiler
+
+print(CatboostTranspiler())
+
 
 def transpile(model: str, model_type: str, output: str):
     pass

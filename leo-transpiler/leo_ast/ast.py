@@ -30,3 +30,6 @@ class LeoAst:
         code = self.to_code()
         with open(path, "w") as f:
             f.write(code)
+
+
+__all__ = ["LeoAst"]
