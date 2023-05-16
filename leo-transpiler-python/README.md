@@ -19,7 +19,9 @@ transpiler.save_code(root=path, program_name="iris")
 3. View part of generated code:
 ```bash
 cat [path]/main.leo
+```
 
+```bash
 program iris.aleo { 
      struct Probas { class_0_proba: i128, class_1_proba: i128, class_2_proba: i128 }
 
