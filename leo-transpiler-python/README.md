@@ -13,11 +13,13 @@ transpiler = XgboostTranspiler(model, quantize_bits=64)
 2. Save Aleo Smart Contract
 ```python
 path = "PATH_TO_SRC_ALEO_PROJECT"
-transpiler.save_code(root=path)
+transpiler.save_code(root=path, program_name="iris.aleo")
 ```
 
 3. View part of generated code:
 ```bash
+cat [path]/main.leo
+
 program iris.aleo { 
      struct Probas { class_0_proba: i128, class_1_proba: i128, class_2_proba: i128 }
 
