@@ -19,10 +19,10 @@ def get_leo_quantized_type(bits: int) -> LeoTypes:
 def quantize(x: float, bits: int) -> str:
     assert bits in [8, 16, 32, 64, 128], "bits must be one of 8, 16, 32, 64, 128"
 
-    x = max(min(x, 1), -1)
-    value = int(x * (1 << (bits - 1)))
+    mlt = 2 ** (bits // 2 - 1) # Avoid overflow
+    value = int(x * mlt)
 
-    if x == 1:
+    if value == mlt:
         value -= 1
 
     leo_type = get_leo_quantized_type(bits).value

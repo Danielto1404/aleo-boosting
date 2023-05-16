@@ -20,6 +20,7 @@ class LeoStatements(enum.Enum):
     IMPORT = "import"
     TRANSITION = "transition"
     MAIN = "main"
+    STRUCT = "struct"
     INLINE = "inline"
     FUNCTION = "function"
     IF = "if"

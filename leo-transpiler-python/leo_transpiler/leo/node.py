@@ -72,7 +72,7 @@ class LeoFunctionDeclarationNode(LeoNode):
             func_name: str,
             input_arg_names: tp.List[str],
             input_arg_types: tp.List[LeoTypes],
-            output_arg_type: LeoTypes,
+            output_arg_type: tp.Union[LeoTypes, str],
             body: LeoNode
     ):
         self.func_type = func_type
@@ -97,7 +97,7 @@ class LeoFunctionDeclarationNode(LeoNode):
             input_args,
             LeoPunctuation.RIGHT_BRACKET.value,
             LeoPunctuation.RIGHT_ARROW.value,
-            self.output_arg_type.value,
+            self.output_arg_type.value if isinstance(self.output_arg_type, LeoTypes) else self.output_arg_type,
             LeoPunctuation.LEFT_CURLY_BRACKET.value,
             LeoPunctuation.NL.value,
             body,
@@ -138,6 +138,44 @@ class LeoFunctionCall(LeoAssignNode):
         super().__init__(var_name, var_type, expression)
 
 
+class LeoStructDeclarationNode(LeoNode):
+    def __init__(self, struct_name: str, field_names: tp.List[str], field_types: tp.List[LeoTypes]):
+        self.struct_name = struct_name
+        self.field_names = field_names
+        self.field_types = field_types
+
+    def to_code(self, tabs: int = 0) -> str:
+        fields = [f"{n}{LeoPunctuation.COLON.value} {t.value}" for n, t in zip(self.field_names, self.field_types)]
+        fields = f"{LeoPunctuation.COMMA.value} ".join(fields)
+
+        return "{}{} {} {} {} {}".format(
+            LeoPunctuation.TAB.value * tabs,
+            LeoStatements.STRUCT.value,
+            self.struct_name,
+            LeoPunctuation.LEFT_CURLY_BRACKET.value,
+            fields,
+            LeoPunctuation.RIGHT_CURLY_BRACKET.value
+        )
+
+
+class LeoStructInitNode(LeoNode):
+    def __init__(self, struct_name: str, field_names: tp.List[str], arg_names: tp.List[str]):
+        self.struct_name = struct_name
+        self.field_names = field_names
+        self.arg_names = arg_names
+
+    def to_code(self, tabs: int = 0) -> str:
+        fields = [f"{n}{LeoPunctuation.COLON.value} {a}" for n, a in zip(self.field_names, self.arg_names)]
+        fields = f"{LeoPunctuation.COMMA.value} ".join(fields)
+
+        return "{} {} {} {}".format(
+            self.struct_name,
+            LeoPunctuation.LEFT_CURLY_BRACKET.value,
+            fields,
+            LeoPunctuation.RIGHT_CURLY_BRACKET.value
+        )
+
+
 class LeoSequentialNode(LeoNode):
     def __init__(self, nodes: tp.List[LeoNode], lines: int = 1):
         self.nodes = nodes
@@ -153,6 +191,8 @@ __all__ = [
     "LeoNode",
     "LeoIfElseNode",
     "LeoReturnNode",
+    "LeoStructDeclarationNode",
+    "LeoStructInitNode",
     "LeoFunctionDeclarationNode",
     "LeoAssignNode",
     "LeoSumNode",

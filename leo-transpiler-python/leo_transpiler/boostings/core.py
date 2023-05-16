@@ -5,7 +5,7 @@ from pathlib import Path
 
 from leo_transpiler.leo import (LeoFunctionCall, LeoFunctionDeclarationNode,
                                 LeoNode, LeoReturnNode, LeoSequentialNode,
-                                LeoSumNode)
+                                LeoSumNode, LeoStructDeclarationNode, LeoStructInitNode)
 from leo_transpiler.leo.syntax import LeoStatements
 from leo_transpiler.leo.utils import aleo_program
 from leo_transpiler.quantize import get_leo_quantized_type
@@ -76,6 +76,12 @@ class BoostingTranspiler(abc.ABC):
                 LeoReturnNode("value")
             ]
         else:
+            struct = LeoStructDeclarationNode(
+                struct_name="Probas",
+                field_names=[f"class_{c}_proba" for c in range(self.n_classes)],
+                field_types=[output_type for _ in range(self.n_classes)]
+            )
+
             returns = [
                 LeoSumNode(
                     var_name=f"class_{c}_proba",
@@ -85,16 +91,24 @@ class BoostingTranspiler(abc.ABC):
                 for c in range(self.n_classes)
             ]
 
+            expression = LeoStructInitNode(
+                struct_name="Probas",
+                field_names=[f"class_{c}_proba" for c in range(self.n_classes)],
+                arg_names=[f"class_{c}_proba" for c in range(self.n_classes)]
+            ).to_code()
+
+            returns.append(LeoReturnNode(expression))
+
         main_transition = LeoFunctionDeclarationNode(
             func_type=LeoStatements.TRANSITION.value,
             func_name=LeoStatements.MAIN.value,
             input_arg_names=self.feature_names,
             input_arg_types=input_types,
-            output_arg_type=output_type,
+            output_arg_type=output_type if self.is_regression else "Probas",
             body=LeoSequentialNode(calls + returns)
         )
 
-        code = LeoSequentialNode(functions + [main_transition], lines=2).to_code(tabs=1)
+        code = LeoSequentialNode([struct] + functions + [main_transition], lines=2).to_code(tabs=1)
         with open(root / "main.leo", "w") as f:
             f.write(aleo_program(code, program_name))
 

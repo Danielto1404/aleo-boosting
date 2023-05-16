@@ -1,6 +1,7 @@
 // The program input for iris/src/main.leo
 [main]
-sepal_length_cm: i128 = 49i128;
-sepal_width_cm: i128 = 0i128;
-petal_length_cm: i128 = 108i128;
-petal_width_cm: i128 = 96i128;
+
+sepal_length_cm: i128 = 11832i128;
+sepal_width_cm: i128 = 13653i128;
+petal_length_cm: i128 = 19438i128;
+petal_width_cm: i128 = 4096i128;
